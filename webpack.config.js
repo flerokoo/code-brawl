@@ -1,8 +1,17 @@
 const path = require('path');
+const webpack = require("webpack")
+
+const { production } = require("yargs")
+    .option("production", {
+        alias: "prod",
+        default: false
+    })
+    .argv;
+
 
 module.exports = {
     entry: './src/entry.ts',
-    mode: "development",
+    mode: production ? "production" : "development",
     module: {
         rules: [
             {
@@ -22,5 +31,10 @@ module.exports = {
     devServer: {
         contentBase: path.join(__dirname, "build"),
         port: 3000
-    }
+    },
+    plugins: [
+        new webpack.DefinePlugin({
+            DEBUG: JSON.stringify(!production)
+        })
+    ]
 };

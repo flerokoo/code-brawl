@@ -31,15 +31,20 @@ window.onload = () => {
     let canvas = document.getElementsByTagName("canvas")[0];
     let app = new App({ canvas });
 
-    for (let i = 0; i < 10; i++) {
+    console.log(DEBUG)
+
+    for (let i = 0; i < 1; i++) {
         let u = new Unit({
             type: "archer",
             health: 100,
             bodyRadius: 10,
+            moveSpeed: 5,
             weaponsGetter: unit => [
                 new MeleeWeapon().setPriority(0)
             ]
         });
+
+        u.moveTo({x: 700, y: 550})
 
         Body.setPosition(u.body, { x: Math.random() * 100 + 100, y: Math.random() * 100 });
             

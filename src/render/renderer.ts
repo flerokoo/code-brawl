@@ -1,17 +1,34 @@
 import World from '../game/world/world';
-import { Application, Graphics } from 'pixi.js';
-import { Composite } from 'matter-js';
+import { Application, Graphics, interaction, Point } from 'pixi.js';
+import { Composite, Vector } from 'matter-js';
 import LevelDefinition from '../levels/level-definition';
+import ServiceProvider from '../util/service-provider';
+import { Service } from '../util/service-provider';
+import FollowPath from '../game/units/actions/follow-path';
 
-export default class Renderer {
+export default class Renderer implements Service {
   
-    pixiapp: Application
-    debug:Graphics
+    pixiapp: Application;
+    debug: Graphics; 
+    world: World;
+    canvas: HTMLCanvasElement;
 
-    constructor(public world: World, public canvas:HTMLCanvasElement) {
+    constructor(public provider: ServiceProvider) {
+        
+        this.world = <World>provider.getService("world")
+        this.canvas = provider.getValue("canvas");
+
         this.pixiapp = new Application({
-            view: canvas
+            view: this.canvas
         });
+
+        let input = new interaction.InteractionManager(this.pixiapp.renderer);
+        input.on("mousedown", e => {
+            let pos: Point = e.data.global;
+            this.world.units.forEach(u => {
+                u.moveTo(Vector.create(pos.x, pos.y));
+            })            
+        })
         
         this.debug = new Graphics();
         this.pixiapp.stage.addChild(this.debug);        
@@ -69,6 +86,13 @@ export default class Renderer {
             }
 
             let path = navmesh.findPath({ x: 0, y: 0 }, { x: 700, y: 550 });
+            
+            let paths = this.world.units
+                .map(u => u.state.action && (<FollowPath>u.state.action).path)
+                .filter(m => Array.isArray(m))
+            
+            if (paths.length > 0) path = paths[0];
+            
             if (path) {
                 debug.lineStyle(2, 0xff0000);
                 debug.moveTo(path[0].x, path[0].y);

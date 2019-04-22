@@ -1,11 +1,12 @@
 import World from './game/world/world';
 import Renderer from './render/renderer';
+import ServiceProvider from './util/service-provider';
 
 export interface AppOptions {
     canvas: HTMLCanvasElement
 }
 
-export default class App {
+export default class App extends ServiceProvider {
 
     world: World;
     renderer: Renderer;
@@ -13,10 +14,18 @@ export default class App {
     simulating: Boolean = true;
     rendering: Boolean = true;
 
-    constructor(opts:AppOptions) {
-        this.world = new World();
+    constructor(opts: AppOptions) {
+        
+        super();        
+
+        this.registerService("world", World);
+        this.registerService("renderer", Renderer);
+        this.registerValue("canvas", opts.canvas)
+
+        this.world = this.getService("world");
+        this.renderer = this.getService("renderer");
+
         this.canvas = opts.canvas;
-        this.renderer = new Renderer(this.world, this.canvas);
         this.updateLayout();
         this.loop();
     }
