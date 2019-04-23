@@ -5,6 +5,8 @@ import Weapon from '../../weapons/weapon';
 import UnitAction from './actions/unit-action';
 import FollowPath from './actions/follow-path';
 import Team from '../teams';
+import { applyMaterialToBody } from '../physics-options';
+import PhysicsOptions from '../physics-options';
 
 
 export interface UnitConfig {
@@ -31,7 +33,9 @@ export default class Unit {
     team: Team; 
  
     constructor(public config: UnitConfig) {
-        this.body = Bodies.circle(0, 0, config.bodyRadius)        
+        this.body = Bodies.circle(0, 0, config.bodyRadius)     
+        applyMaterialToBody(PhysicsOptions.materials.unit, this.body);
+
         this.interface = constructInterfaceForUnit(this);
 
         this.state = {

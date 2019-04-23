@@ -35,6 +35,12 @@ module.exports = {
     plugins: [
         new webpack.DefinePlugin({
             DEBUG: JSON.stringify(!production)
+        }),
+        new webpack.ProvidePlugin({
+            // 'poly-decomp': path.join(__dirname, "./node_modules/poly-decomp/build/decomp")
+            'poly-decomp': 'poly-decomp',
+            'require("poly-decomp")': 'poly-decomp',
         })
     ]
 };
+// require("./node_modules/poly-decomp/build/decomp")

@@ -1,9 +1,10 @@
 import Unit from '../units/unit';
 import { Engine, Render, World as MatterWorld, Bodies, Runner, Composite, Vector, Query, Body } from 'matter-js';
-import LevelDefinition from '../../levels/level-definition';
-import * as Navmesh from 'navmesh';
 import { Service } from '../../util/service-provider';
 import ServiceProvider from '../../util/service-provider';
+import Navmesh from 'navmesh';
+import WorldFactory from './world-factory';
+import LevelDefinition from '../../levels/level-definition';
 
 export default class World implements Service {
 
@@ -12,7 +13,8 @@ export default class World implements Service {
     units: Unit[] = []; 
     obstacles: Body[] = [];
     engine: Engine;
-    navmesh: Navmesh;
+    navmesh: Navmesh;   
+    
     
     // render: Render;  
 
@@ -42,8 +44,46 @@ export default class World implements Service {
         })
 
         this.loadLevel({
-            navmesh: nv
-        })
+            navmesh: nv,
+            width: 1021,
+            height: 600,
+            obstacles: [{
+                verts: [
+                    { x: 185, y: 117 },
+                    { x: 269, y: 156 },
+                    { x: 228, y: 236 },
+                    { x: 149, y: 198 }
+                ]
+            }, {                
+                verts: [
+                    { x: 439, y: 300 },
+                    { x: 594, y: 305 },
+                    { x: 588, y: 392 },
+                    { x: 432, y: 390 },
+                ]
+            }, {
+                verts: [
+                    { x: 694, y: 152 },
+                    { x: 755, y: 113 },
+                    { x: 831, y: 214 },
+                    { x: 769, y: 256 }
+                ]
+            }, {
+                verts: [
+                    {x: 806, y: 373},
+                    {x: 878, y: 414},
+                    {x: 797, y: 516},
+                    {x: 724, y: 476}
+                ]
+            }, {
+                verts: [
+                    {x: 330, y: 484},
+                    {x: 250, y: 535},
+                    {x: 161, y: 412},
+                    {x: 235, y: 362}
+                ]
+            }
+            ]})
     }
 
     addUnit(unit: Unit) {
@@ -65,7 +105,10 @@ export default class World implements Service {
 
     loadLevel(level:LevelDefinition) {
         this.clear();
+        WorldFactory.createWalls(this.engine.world, level.width, level.height)
+        WorldFactory.createObstacles(this.engine.world, level.obstacles);
         this.navmesh = new Navmesh(level.navmesh, 0);
+        console.log(Navmesh)
     }
 
     isPointReachable(p: Vector) {

@@ -15,7 +15,7 @@ export default class Renderer implements Service {
 
     constructor(public provider: ServiceProvider) {
         
-        this.world = <World>provider.getService("world")
+        this.world = provider.getService("world")
         this.canvas = provider.getValue("canvas");
 
         this.pixiapp = new Application({
@@ -25,6 +25,7 @@ export default class Renderer implements Service {
         let input = new interaction.InteractionManager(this.pixiapp.renderer);
         input.on("mousedown", e => {
             let pos: Point = e.data.global;
+            console.log(pos)
             this.world.units.forEach(u => {
                 u.moveTo(Vector.create(pos.x, pos.y));
             })            

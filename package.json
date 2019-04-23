@@ -8,9 +8,10 @@
     "@types/matter-js": "^0.10.2",
     "@types/pixi.js": "^4.8.7",
     "@types/victor": "^1.1.0",
-    "matter-js": "^0.14.2",
+    "matter-js": "github:liabru/matter-js",
     "navmesh": "^2.0.2",
-    "pixi.js": "^4.8.7"
+    "pixi.js": "^4.8.7",
+    "poly-decomp": "^0.3.0"
   },
   "devDependencies": {
     "ts-loader": "^5.3.3",

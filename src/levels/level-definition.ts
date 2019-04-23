@@ -2,7 +2,12 @@ import { UnitConfig } from '../game/units/unit';
 import { Vector } from 'matter-js';
 import Team from '../game/teams';
 
+
 type ArrayOfVectors = { x: number, y: number }[];
+
+type ObstacleDefinition = {
+    verts: ArrayOfVectors;
+}
 
 type UnitDefinition = {   
     config: UnitConfig,
@@ -14,8 +19,8 @@ type UnitDefinition = {
 
 export default interface LevelDefinition {
     navmesh: ArrayOfVectors[];
-    // obstacles: ArrayOfVectors[];
+    width: number;
+    height: number;
+    obstacles?: ObstacleDefinition[];
     // units: UnitDefinition[];
-    // width: number,
-    // height:number,
 }

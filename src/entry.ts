@@ -1,7 +1,8 @@
 
+/// <reference path="../typings/navmesh/index.d.ts"/>
 import Unit from './game/units/unit';
 import World from './game/world/world';
-import * as Navmesh from 'navmesh';
+// import * as Navmesh from 'navmesh';
 import App from './app';
 import { Bodies, Body } from 'matter-js';
 import MeleeWeapon from './weapons/melee-weapon';
@@ -31,21 +32,20 @@ window.onload = () => {
     let canvas = document.getElementsByTagName("canvas")[0];
     let app = new App({ canvas });
 
-    console.log(DEBUG)
 
     for (let i = 0; i < 1; i++) {
         let u = new Unit({
             type: "archer",
             health: 100,
             bodyRadius: 10,
-            moveSpeed: 5,
+            moveSpeed: 10,
             weaponsGetter: unit => [
                 new MeleeWeapon().setPriority(0)
             ]
         });
 
-        u.moveTo({x: 700, y: 550})
-
+        u.moveTo({ x: 700, y: 550 });
+        (<any>window).unit = u;
         Body.setPosition(u.body, { x: Math.random() * 100 + 100, y: Math.random() * 100 });
             
         (<any>window).ap =

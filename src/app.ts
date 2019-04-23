@@ -1,6 +1,7 @@
 import World from './game/world/world';
 import Renderer from './render/renderer';
 import ServiceProvider from './util/service-provider';
+import Messenger from './util/messenger';
 
 export interface AppOptions {
     canvas: HTMLCanvasElement
@@ -20,6 +21,7 @@ export default class App extends ServiceProvider {
 
         this.registerService("world", World);
         this.registerService("renderer", Renderer);
+        this.registerService("messenger", Messenger);
         this.registerValue("canvas", opts.canvas)
 
         this.world = this.getService("world");
