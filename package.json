@@ -4,6 +4,7 @@
   "description": "",
   "main": "index.js",
   "dependencies": {
+    "@flatten-js/core": "^1.0.14",
     "@types/matter-js": "^0.10.2",
     "@types/pixi.js": "^4.8.7",
     "@types/victor": "^1.1.0",

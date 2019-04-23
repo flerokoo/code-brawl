@@ -4,7 +4,7 @@ import Team from '../game/teams';
 
 type ArrayOfVectors = { x: number, y: number }[];
 
-type UnitDefinition = {
+type UnitDefinition = {   
     config: UnitConfig,
     team: Team, 
     positions: ArrayOfVectors
@@ -16,4 +16,6 @@ export default interface LevelDefinition {
     navmesh: ArrayOfVectors[];
     // obstacles: ArrayOfVectors[];
     // units: UnitDefinition[];
+    // width: number,
+    // height:number,
 }
