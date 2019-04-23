@@ -89,7 +89,7 @@ export default class Renderer implements Service {
             let path = navmesh.findPath({ x: 0, y: 0 }, { x: 700, y: 550 });
             
             let paths = this.world.units
-                .map(u => u.state.action && (<FollowPath>u.state.action).path)
+                .map(u => u.state.ai.action && (<FollowPath>u.state.ai.action).path)
                 .filter(m => Array.isArray(m))
             
             if (paths.length > 0) path = paths[0];

@@ -1,11 +1,11 @@
-
-/// <reference path="../typings/navmesh/index.d.ts"/>
 import Unit from './game/units/unit';
 import World from './game/world/world';
 // import * as Navmesh from 'navmesh';
 import App from './app';
 import { Bodies, Body } from 'matter-js';
 import MeleeWeapon from './weapons/melee-weapon';
+import RangedWeapon from './weapons/ranged-weapon';
+
 
 window.onload = () => {
     // let w = new World()
@@ -40,18 +40,33 @@ window.onload = () => {
             bodyRadius: 10,
             moveSpeed: 10,
             weaponsGetter: unit => [
+                new RangedWeapon().setPriority(1),
                 new MeleeWeapon().setPriority(0)
             ]
         });
 
-        u.moveTo({ x: 700, y: 550 });
-        (<any>window).unit = u;
-        Body.setPosition(u.body, { x: Math.random() * 100 + 100, y: Math.random() * 100 });
-            
-        (<any>window).ap =
-            () => Body.applyForce(u.body, u.body.position, { x: 0.4, y: 0.1 })
         
+        (<any>window).unit = u;
+        Body.setPosition(u.body, { x: Math.random() * 100 + 100, y: Math.random() * 100 });            
+   
         app.world.addUnit(u);
+
+
+        let enemy = new Unit({
+            type: "swordsman",
+            health: 100,
+            bodyRadius: 10,
+            moveSpeed: 10,
+            weaponsGetter: unit => [
+                new MeleeWeapon().setPriority(0)
+            ]
+        });
+
+        Body.setPosition(enemy.body, { x: 635, y: 429 });
+
+        app.world.addUnit(enemy);
+        (<any>window).enemy = enemy;
+
     }
     
     

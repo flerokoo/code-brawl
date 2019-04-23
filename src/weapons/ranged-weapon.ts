@@ -7,11 +7,17 @@ export default class RangedWeapon extends Weapon {
     constructor() {
         super();
         this.type = WeaponType.RANGED;
+        this.minRange = 15;
+        this.maxRange = 100;
     }
 
-    use(target: Unit | Vector) {
+    useEffect(target: Unit | Vector) {
         if (this.isInRange(target)) {
             // launch projectile
+            console.log("using ranged")
+            return true;
         }
+    
+        return false;
     }    
 }

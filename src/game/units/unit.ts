@@ -7,6 +7,8 @@ import FollowPath from './actions/follow-path';
 import Team from '../teams';
 import { applyMaterialToBody } from '../physics-options';
 import PhysicsOptions from '../physics-options';
+import Attack from './actions/attack';
+import AI from './actions/ai';
 
 
 export interface UnitConfig {
@@ -21,11 +23,13 @@ export interface UnitState {
     health: number,
     dead: boolean,
     weapons: Weapon[],
-    action?:UnitAction
+    ai?:AI
 }
 
 export default class Unit {
 
+    private _forcedWeaponIndex: number = -1;
+    private _selectedWeaponIndex: number = -1;
     world: World;
     interface: UnitInterface;
     state: UnitState;
@@ -41,7 +45,8 @@ export default class Unit {
         this.state = {
             weapons: config.weaponsGetter(this),
             health: config.health,
-            dead: false
+            dead: false,
+            ai: new AI(this)
         };
 
         this.state.weapons.forEach(weapon => weapon.setOwner(this));
@@ -54,12 +59,7 @@ export default class Unit {
             return;    
         }
 
-        if (this.state.action) {
-            this.state.action.update(dt);
-            if (this.state.action.isFinished()) {
-                this.state.action = null;
-            }
-        }
+        this.state.ai.update(dt);
     }
 
     receiveDamage(damage: number): any {
@@ -70,12 +70,44 @@ export default class Unit {
     }
 
     moveTo(pos: Vector) {
-        this.state.action = new FollowPath(this, pos);
+        this.state.ai.setAction(new FollowPath(this, pos));
+        return this;
+    }
+
+    attack(target: Unit | Vector) {
+        if (target == this) return;
+        
+        this.state.ai.setAction(new Attack(this, target));
         return this;
     }
 
     stop() {
-        this.state.action = null;
+        this.state.ai.stop();
+    }
+
+    forceWeapon(index: number) {
+        if (index < 0 || index >= this.state.weapons.length) {
+            throw new Error(`No weapon with index ${index}`)            
+        }
+
+        this._forcedWeaponIndex = index;
+        this._selectedWeaponIndex = -1; // to reselect next time selectedWeapon getter used
+    }
+
+    selectWeapon() {
+        if (this._forcedWeaponIndex >= 0) {
+            this._selectedWeaponIndex = this._forcedWeaponIndex;
+        } else {
+            this._selectedWeaponIndex = this.state.weapons.reduce((prev, cur, i, arr) => {
+                return cur.priority > arr[prev].priority
+                    ? i : prev;
+            }, 0);
+        }
+    }
+
+    get selectedWeapon() {
+        if (this._selectedWeaponIndex < 0) this.selectWeapon();
+        return this.state.weapons[this._selectedWeaponIndex]
     }
 
 }

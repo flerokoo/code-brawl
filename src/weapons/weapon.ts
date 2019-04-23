@@ -11,8 +11,20 @@ export default abstract class Weapon {
     public maxRange: number;
     public type: WeaponType;
 
-    abstract use(target: Vector | Unit): void;    
+    private _useTimeStamp = 0;
 
+    use(target: Vector | Unit) {
+        if (this.cooledDown) {
+            if (this.useEffect(target)) {
+                // weapon was used
+                this._useTimeStamp = Date.now();
+            }
+        }
+    }       
+
+    abstract useEffect(target: Vector | Unit): boolean;
+
+    
 
     setOwner(un: Unit) {
         this.owner = un;
@@ -33,6 +45,10 @@ export default abstract class Weapon {
         let upos = this.owner.body.position;
         let dist = Vector.magnitude(Vector.sub(upos, pos)); // TODO to sqrt
         return dist >= this.minRange && dist <= this.maxRange;        
+    }
+
+    get cooledDown() {
+        return Date.now() - this._useTimeStamp >= this.cooldown;
     }
 
 }

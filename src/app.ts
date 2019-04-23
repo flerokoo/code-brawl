@@ -30,6 +30,7 @@ export default class App extends ServiceProvider {
         this.canvas = opts.canvas;
         this.updateLayout();
         this.loop();
+
     }
 
     updateLayout() {

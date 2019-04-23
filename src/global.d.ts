@@ -1,0 +1,2 @@
+declare let DEVMODE: boolean;
+

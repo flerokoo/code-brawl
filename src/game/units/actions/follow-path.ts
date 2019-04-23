@@ -2,18 +2,22 @@ import UnitAction from './unit-action';
 import { Vector, Body } from 'matter-js';
 import Unit from '../unit';
 import Flatten from '@flatten-js/core';
+import Ticker from '../../../util/ticker';
 
 export default class FollowPath extends UnitAction {
 
     public path: Vector[];
     public index: number;
     
+    private _ticker: Ticker = new Ticker(60);
 
-    constructor(public unit: Unit, public target:Vector) {
+    constructor(public unit: Unit, public target:Vector | Unit) {
         super(unit); 
     }
 
-    update(dt:number) {
+    update(dt: number) {
+        this._ticker.update();
+
         if (!this.path || this.isPathInvalid()) {
             this.regenPath();
         }
@@ -84,11 +88,21 @@ export default class FollowPath extends UnitAction {
     }
 
     regenPath() {
-        this.path = this.unit.world.navmesh.findPath(this.unit.body.position, this.target);        
+        this.path = this.unit.world.navmesh.findPath(this.unit.body.position,
+            this.target instanceof Unit ? this.target.body.position : this.target);        
         this.index = 0;
     }
 
     isPathInvalid() {
+        if (this.path && this.target instanceof Unit) {
+            if (this._ticker.tick == 0) {
+                let dist = Vector.magnitude(Vector.sub(this.target.body.position, this.path[this.path.length - 1]));
+                if (dist > 20) {
+                    return true;
+                }
+            }
+        }
+
         return false;
     }
 }

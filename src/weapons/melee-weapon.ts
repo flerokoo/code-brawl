@@ -9,14 +9,18 @@ export default class MeleeWeapon extends Weapon {
         this.type = WeaponType.MELEE;
     }
 
-    use(target: Unit | Vector) {
+    useEffect(target: Unit | Vector) {
         if (target instanceof Vector) {
             throw new Error("Using melee weapons allowed only on Unit targets");
         }
 
         if (this.isInRange(target)) {
-            target.receiveDamage(this.damage);
+            console.log("HIT")
+            target.receiveDamage(this.damage);            
+            return true;
         }
+
+        return false;
     }
 
 }

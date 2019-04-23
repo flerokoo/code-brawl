@@ -1,8 +1,12 @@
 import Unit from './unit';
 import { Vector, Body } from 'matter-js';
+import Team from '../teams';
 
 export interface UnitInterface {
-    health:number
+    health: number;
+    team: Team;
+    position: Vector;
+    velocity: Vector;
 }
 
 export let constructInterfaceForUnit = (unit: Unit): UnitInterface => {
@@ -40,6 +44,9 @@ export let constructInterfaceForUnit = (unit: Unit): UnitInterface => {
         "velocity": {            
             get: () => velocity,
             // set: (position:Vector) => Body.setPosition(unit.body, position)
+        },
+        "team": {
+            get: () => unit.team
         }
     })
 }

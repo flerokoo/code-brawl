@@ -13,8 +13,9 @@ export interface WorldInterface {
 
 export let constructInterfaceForWorld = (world: World, player:Team):WorldInterface => {
 
-    let friendlyUnits = world.units.filter(unit => unit.team == player);
-    let enemyUnits = world.units.filter(unit => unit.team != player);
+    let units = world.units.map(u => u.interface);
+    let friendlyUnits = units.filter(unit => unit.team == player);
+    let enemyUnits = units.filter(unit => unit.team != player);
     let navmesh = world.navmesh;
 
     if (!navmesh) {
