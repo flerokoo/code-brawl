@@ -1,7 +1,7 @@
 import UnitAction from './unit-action';
 import { Vector, Body } from 'matter-js';
 import Unit from '../unit';
-import * as Flatten from '@flatten-js/core';
+import Flatten from '@flatten-js/core';
 
 export default class FollowPath extends UnitAction {
 
@@ -11,7 +11,6 @@ export default class FollowPath extends UnitAction {
 
     constructor(public unit: Unit, public target:Vector) {
         super(unit); 
-        console.log(Flatten)
     }
 
     update(dt:number) {
@@ -41,7 +40,7 @@ export default class FollowPath extends UnitAction {
             let dx = distToPathLine.pe.x - distToPathLine.ps.x;
             let dy = distToPathLine.pe.y - distToPathLine.ps.y;
            
-            let k = 0.75;
+            let k = 1.75;
             posForce.x = -dx * k;
             posForce.y = -dy * k;
 
